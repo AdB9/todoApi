@@ -1,17 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3001;
-var todos = [{
-    id:1,
-    description: 'Meet mom for lunch',
-    completed: false
-},
-{
-    id:2,
-    description: 'Go to market',
-    completed: false
-}]
+var todos = [];
+var todoNextId = 1;
 
+app.use(bodyParser.json());
 app.get('/',function(req,res){
     res.send('TODO api root');
 })
@@ -32,6 +26,15 @@ app.get('/todo/:id', function(req, res){
     res.json( matchedTodo)
     else
     res.status(404).send('No match found for id')
+})
+
+app.post('/todo', function(req,res){
+var body = req.body;
+body.id = todoNextId++;
+// Object.assign(body,{id: todoNextId})
+todos.push(body)
+
+res.json(body);
 })
 
 app.listen(PORT, function(){

@@ -7,12 +7,19 @@ var todos = [];
 var todoNextId = 1;
 
 app.use(bodyParser.json());
-app.get('/', function (req, res) {
-    res.send('TODO api root');
-})
 
 app.get('/todos', function (req, res) {
-    res.json(todos)
+    var queryParams = req.query;
+    var filteredTodos = todos;
+
+    if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true'){
+        filteredTodos = _.where(filteredTodos, {completed: true})
+    }else if(queryParams.hasOwnProperty('completed') && queryParams.completed === 'false'){
+        filteredTodos = _.where(filteredTodos, {completed: false})
+    }else if((queryParams.hasOwnProperty('completed')))
+        res.status(400).send();
+    
+    res.json(filteredTodos)
 })
 
 app.get('/todo/:id', function (req, res) {

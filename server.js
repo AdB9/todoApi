@@ -39,6 +39,19 @@ todos.push(body)
 res.json(body);
 })
 
+app.delete('/deleteTodo/:id', function(req, res){
+    let todoId = parseInt(req.params.id,10);
+    let matchedTodo = _.findWhere(todos,{id: todoId});
+
+    if(matchedTodo){
+        todos = _.without(todos, matchedTodo);
+    res.json( matchedTodo);
+    }
+    else
+    res.status(404).send('No match found for id')
+    
+})
+
 app.listen(PORT, function(){
 console.log('Listening on Port: '+ PORT);
 })
